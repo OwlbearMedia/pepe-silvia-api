@@ -1,3 +1,3 @@
 #!/bin/zsh
 
-aws lightsail create-container-service-deployment --service-name pepe-silvia-api --containers file://containers.json --public-endpoint file://public-endpoint.json
+docker pull 640550388417.dkr.ecr.us-west-2.amazonaws.com/pepe-silvia:latest

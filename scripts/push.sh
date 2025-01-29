@@ -1,3 +1,4 @@
 #!/bin/zsh
 
-aws lightsail push-container-image --service-name pepe-silvia-api --label flask-container --image flask-container
+docker tag pepe-silvia:latest 640550388417.dkr.ecr.us-west-2.amazonaws.com/pepe-silvia:latest
+docker push 640550388417.dkr.ecr.us-west-2.amazonaws.com/pepe-silvia:latest

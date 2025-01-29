@@ -1,6 +1,6 @@
 {
     "flask": {
-        "image": ":pepe-silvia-api.flask-container.3",
+        "image": ":pepe-silvia-api.flask-container.4",
         "ports": {
             "5328": "HTTP"
         }
