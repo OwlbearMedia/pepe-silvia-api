@@ -1,9 +1,7 @@
 # main.py
 
-
 from flask import Blueprint
 from flask_login import login_required
-
 
 main = Blueprint('main', __name__)
 

@@ -1,10 +1,11 @@
 # models.py
 
+class User():
+    is_authenticated = True
+    is_active = True
+    is_anonymous = False
+    password = ''
 
-from flask_login import UserMixin
-
-
-class User(UserMixin):
     def __init__(self, dbUser):
         self.name = dbUser['name']
         self.email = dbUser['email']
@@ -12,3 +13,8 @@ class User(UserMixin):
 
     def get_id(self):
         return self.email
+
+    def authenticate(self):
+        self.is_authenticated = True
+        self.is_active = True
+        self.is_anonymous = False
