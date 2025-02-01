@@ -32,12 +32,12 @@ def create_app():
         else:
             return None
 
-    # blueprint for auth routes in our app
-    from .auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint)
+    # blueprint for the user api
+    from .user import auth as user_blueprint
+    app.register_blueprint(user_blueprint)
 
-    # blueprint for non-auth parts of app
-    from .main import main as main_blueprint
-    app.register_blueprint(main_blueprint)
+    # blueprint for (conspiracy) boards api
+    from .board import board as board_blueprint
+    app.register_blueprint(board_blueprint)
 
     return app

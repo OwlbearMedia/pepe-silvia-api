@@ -1,16 +1,15 @@
-# auth.py
+# user.py
 
 import json
-from flask import Blueprint, request, Response, redirect, url_for
-from boto3.dynamodb.conditions import Key
+from flask import Blueprint, request, Response
 from flask_login import login_user
 from .models import User
 from . import dynamodb
 
-auth = Blueprint('auth', __name__)
+user = Blueprint('user', __name__)
 
 
-@auth.route('/api/login', methods=['POST'])
+@user.route('/api/user/login', methods=['POST'])
 def login():
     requestData = request.get_json()
     email = requestData['email']
@@ -41,7 +40,7 @@ def login():
         return Response(status=200)
 
 
-@auth.route('/api/signup', methods=['POST'])
+@user.route('/api/user/signup', methods=['POST'])
 def signup():
     requestData = request.get_json()
     email = requestData['email']
@@ -72,19 +71,9 @@ def signup():
                 }
             )
 
-        return redirect(url_for('auth.login'))
+        return Response(status=200)
 
 
-@auth.route('/api/board/<int:boardId>', methods=['GET'])
-def boards(boardId):
-    table = dynamodb.Table('boards')
-    response = table.query(
-        KeyConditionExpression=Key('boardId').eq(boardId)
-    )
-    items = response['Items']
-    return items
-
-
-@auth.route('/api/logout')
+@user.route('/api/logout')
 def logout():
     return 'Logout'
