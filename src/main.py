@@ -1,5 +1,8 @@
+# main.py
+
+
 from flask import Blueprint
-# from . import dynamodb
+from flask_login import login_required
 
 
 main = Blueprint('main', __name__)
@@ -11,5 +14,6 @@ def index():
 
 
 @main.route('/api/profile')
+@login_required
 def profile():
     return 'Profile'

@@ -1,5 +1,10 @@
+# auth.py
+
+
 from flask import Blueprint, request, make_response, redirect, url_for
 from boto3.dynamodb.conditions import Key
+from flask_login import login_user
+from .models import User
 from . import dynamodb
 
 
@@ -16,15 +21,17 @@ def login():
     response = table.get_item(
         Key={
             'email': email,
-            'password': password
         }
     )
-    user = response['Item']
 
-    if not user or password != user['password']:
+    if hasattr(response, 'Item'):
+        user = User(response['Item'])
+
+    if 'user' not in locals() or password != user.password:
         response = make_response()
         return response
 
+    login_user(user)
     return redirect(url_for('main.profile'))
 
 
