@@ -1,3 +1,5 @@
+# init.py
+
 import os
 from flask import Flask
 import boto3
@@ -22,18 +24,16 @@ def create_app():
     def load_user(user_id):
         table = dynamodb.Table('users')
         response = table.get_item(
-            Key={
-                'email': user_id,
-            }
+            Key={'email': user_id}
         )
 
-        if response['Item']:
+        if 'Item' in response:
             return User(response['Item'])
         else:
             return None
 
     # blueprint for the user api
-    from .user import auth as user_blueprint
+    from .user import user as user_blueprint
     app.register_blueprint(user_blueprint)
 
     # blueprint for (conspiracy) boards api

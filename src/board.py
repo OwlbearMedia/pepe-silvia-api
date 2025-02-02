@@ -10,7 +10,7 @@ board = Blueprint('board', __name__)
 
 @board.route('/api/')
 def index():
-    return 'Index'
+    return 'ಠ_ಠ'
 
 
 @board.route('/api/board/<int:boardId>', methods=['GET'])

@@ -2,7 +2,7 @@
 
 import json
 from flask import Blueprint, request, Response
-from flask_login import login_user
+from flask_login import login_user, login_required, logout_user
 from .models import User
 from . import dynamodb
 
@@ -18,9 +18,7 @@ def login():
 
     table = dynamodb.Table('users')
     response = table.get_item(
-        Key={
-            'email': email,
-        }
+        Key={'email': email}
     )
 
     if 'Item' in response:
@@ -45,17 +43,14 @@ def signup():
     requestData = request.get_json()
     email = requestData['email']
     password = requestData['password']
+    name = requestData['name']
 
     table = dynamodb.Table('users')
     response = table.get_item(
-        Key={
-            'email': email,
-            'password': password
-        }
+        Key={'email': email}
     )
-    user = response['Item']
 
-    if user:
+    if 'Item' in response:
         res = {'error': 'User already exists'}
         return Response(
             status=400,
@@ -68,12 +63,15 @@ def signup():
             Item={
                     'email': email,
                     'password': password,
+                    'name': name
                 }
             )
 
         return Response(status=200)
 
 
-@user.route('/api/logout')
+@user.route('/api/user/logout')
+@login_required
 def logout():
-    return 'Logout'
+    logout_user()
+    return Response(status=200)
