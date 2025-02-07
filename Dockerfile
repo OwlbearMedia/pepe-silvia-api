@@ -17,4 +17,4 @@ RUN pip install -r requirements.txt
 ADD src .
 
 # Specify the command to run on container start
-CMD [ "python", "./index.py" ]
+CMD [ "flask", "--app", "app","run" ]
