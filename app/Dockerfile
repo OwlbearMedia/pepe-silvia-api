@@ -8,7 +8,11 @@ EXPOSE 5328/tcp
 WORKDIR /app
 
 # Copy the dependencies file to the working directory
-COPY requirements.txt .
+COPY /requirements.txt .
+
+# Copy SSL certs
+COPY /certs/fullchain.pem /nginx
+COPY /certs/privkey.pem /nginx
 
 # Install any dependencies
 RUN pip install -r requirements.txt

@@ -1,6 +1,6 @@
 # init.py
 
-import os
+import uuid
 from flask import Flask, Blueprint
 import boto3
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -14,7 +14,7 @@ app = Flask(__name__)
 app.wsgi_app = ProxyFix(
     app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
 )
-app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+app.config['SECRET_KEY'] = uuid.uuid4().hex
 
 login_manager = LoginManager()
 login_manager.init_app(app)
