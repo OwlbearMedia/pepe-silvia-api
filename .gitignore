@@ -174,4 +174,4 @@ cython_debug/
 .terraform
 .terraform.lock.hcl
 .aws
-nginx/certs
+pepe-silvia-nginx/certs

@@ -1,5 +1,3 @@
-# models.py
-
 class UserModel():
     is_authenticated = True
     is_active = True

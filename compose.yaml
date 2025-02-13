@@ -1,21 +1,22 @@
 services:
   web:
     image: nginx
+    restart: always
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./pepe-silvia-nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./pepe-silvia-nginx/certs:/root/ssl
     # environment: 
     #   - FLASK_SERVER_ADDR=backend:5328  
-    # command: /bin/bash -c "envsubst < /tmp/nginx.conf > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'" 
     ports:
-      - 8080:80
+      - 80:80
       - 443:443
     depends_on:
-      - backend
+      - flask
 
-  backend:
-    build:
-      context: pepe-silvia
-      # target: builder
+  flask:
+    build: .
+    image: 640550388417.dkr.ecr.us-west-2.amazonaws.com/pepe-silvia-api-flask:latest
+    restart: always
     # flask requires SIGINT to stop gracefully
     # (default stop signal from Compose is SIGTERM)
     stop_signal: SIGINT
@@ -27,9 +28,3 @@ services:
      - type: bind
        source: ./.aws
        target: /pepe-silvia/.aws
-    #  - type: bind
-    #    source: ./app/.env
-    #    target: /app
-    #  - ./app:/app
-    # volumes:
-

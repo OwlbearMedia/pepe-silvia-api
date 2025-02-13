@@ -1,5 +1,3 @@
-# app.py
-
 import uuid
 from flask import Flask
 import boto3
