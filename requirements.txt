@@ -1,4 +1,0 @@
-Flask==3.0.3
-boto3==1.36.7
-flask-login==0.6.3
-werkzeug

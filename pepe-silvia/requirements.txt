@@ -1,0 +1,6 @@
+Flask==3.0.3
+boto3[crt]==1.36.7
+flask-login==0.6.3
+waitress==3.0.2
+werkzeug
+python-dotenv

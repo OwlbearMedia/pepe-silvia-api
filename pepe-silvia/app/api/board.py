@@ -1,19 +1,17 @@
-# main.py
-
 import json
-from flask import Blueprint, Response
+from flask import Response
 from flask_login import login_required, current_user
-from . import dynamodb
+from app import dynamodb
+from app.api import bp
 
-board = Blueprint('board', __name__)
 
-
-@board.route('/api/')
+@bp.route('/')
 def index():
+    print('me')
     return 'ಠ_ಠ'
 
 
-@board.route('/api/board/<int:boardId>', methods=['GET'])
+@bp.route('/board/<int:boardId>', methods=['GET'])
 @login_required
 def boards(boardId):
     table = dynamodb.Table('boards')

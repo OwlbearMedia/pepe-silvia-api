@@ -1,11 +1,9 @@
-# init.py
-
-import os
+import uuid
 from flask import Flask
 import boto3
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_login import LoginManager
-from .models import User
+from .models import UserModel
 
 dynamodb = boto3.resource('dynamodb')
 
@@ -15,7 +13,7 @@ def create_app():
     app.wsgi_app = ProxyFix(
         app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
     )
-    app.config['SECRET_KEY'] = os.environ['SECRET_KEY']
+    app.config['SECRET_KEY'] = uuid.uuid4().hex
 
     login_manager = LoginManager()
     login_manager.init_app(app)
@@ -28,16 +26,11 @@ def create_app():
         )
 
         if 'Item' in response:
-            return User(response['Item'])
+            return UserModel(response['Item'])
         else:
             return None
 
-    # blueprint for the user api
-    from .user import user as user_blueprint
-    app.register_blueprint(user_blueprint)
-
-    # blueprint for (conspiracy) boards api
-    from .board import board as board_blueprint
-    app.register_blueprint(board_blueprint)
+    from app.api import bp as api_bp
+    app.register_blueprint(api_bp, url_prefix='/api')
 
     return app

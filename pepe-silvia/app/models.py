@@ -1,6 +1,4 @@
-# models.py
-
-class User():
+class UserModel():
     is_authenticated = True
     is_active = True
     is_anonymous = False
