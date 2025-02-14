@@ -15,6 +15,7 @@ services:
 
   flask:
     build: .
+      # context: pepe-silvia
     image: 640550388417.dkr.ecr.us-west-2.amazonaws.com/pepe-silvia-api-flask:latest
     restart: always
     # flask requires SIGINT to stop gracefully
