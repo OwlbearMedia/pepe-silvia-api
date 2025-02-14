@@ -3,6 +3,7 @@ from flask import Flask
 import boto3
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_login import LoginManager
+from flask_cors import CORS
 from .models import UserModel
 
 dynamodb = boto3.resource('dynamodb')
@@ -10,6 +11,7 @@ dynamodb = boto3.resource('dynamodb')
 
 def create_app():
     app = Flask(__name__)
+    CORS(app, resources={r'/api/*': {'origins': 'http://localhost:3000'}})
     app.wsgi_app = ProxyFix(
         app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
     )
