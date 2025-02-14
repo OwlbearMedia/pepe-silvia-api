@@ -1,4 +1,5 @@
 import json
+import bcrypt
 from flask import request, Response
 from flask_login import login_user, login_required, logout_user
 from app.models import UserModel
@@ -6,11 +7,15 @@ from app import dynamodb
 from app.api import bp
 
 
+def hashPassword(password):
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+
 @bp.route('/user/login', methods=['POST'])
 def login():
     requestData = request.get_json()
     email = requestData['email']
-    password = requestData['password']
+    password = hashPassword(requestData['password'])
     user = UserModel
 
     table = dynamodb.Table('users')
@@ -32,7 +37,14 @@ def login():
     else:
         user.authenticate()
         login_user(user, remember=True)
-        return Response(status=200)
+        return Response(
+            status=200,
+            mimetype='application/json',
+            response=json.dumps({
+                'email': user.email,
+                'name': user.name
+            })
+        )
 
 
 @bp.route('/user/signup', methods=['POST'])
@@ -59,12 +71,19 @@ def signup():
         table.put_item(
             Item={
                     'email': email,
-                    'password': password,
+                    'password': hashPassword(password),
                     'name': name
                 }
             )
 
-        return Response(status=200)
+        return Response(
+            status=200,
+            mimetype='application/json',
+            response=json.dumps({
+                'email': email,
+                'name': name
+            })
+        )
 
 
 @bp.route('/user/logout')
