@@ -1,21 +1,18 @@
 import json
-import bcrypt
+from argon2 import PasswordHasher
 from flask import request, Response
 from flask_login import login_user, login_required, logout_user
 from app.models import UserModel
 from app import dynamodb
 from app.api import bp
 
-
-def hashPassword(password):
-    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+ph = PasswordHasher()
 
 
 @bp.route('/user/login', methods=['POST'])
 def login():
     requestData = request.get_json()
     email = requestData['email']
-    password = hashPassword(requestData['password'])
     user = UserModel
 
     table = dynamodb.Table('users')
@@ -25,8 +22,9 @@ def login():
 
     if 'Item' in response:
         user = UserModel(response['Item'])
+        password = requestData['password'].encode('utf-8')
 
-    if password != user.password:
+    if not ph.verify(user.password, password):
         res = {'error': 'Invalid login credentials'}
         return Response(
             status=401,
@@ -51,7 +49,7 @@ def login():
 def signup():
     requestData = request.get_json()
     email = requestData['email']
-    password = requestData['password']
+    password = ph.hash(requestData['password'].encode('utf-8'))
     name = requestData['name']
 
     table = dynamodb.Table('users')
@@ -71,8 +69,8 @@ def signup():
         table.put_item(
             Item={
                     'email': email,
-                    'password': hashPassword(password),
-                    'name': name
+                    'password': password,
+                    'name': name,
                 }
             )
 
